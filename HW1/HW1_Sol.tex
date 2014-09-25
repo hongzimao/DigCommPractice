@@ -1,0 +1,293 @@
+\documentclass [12pt] {article}
+\usepackage[top=1in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[export]{adjustbox}
+\usepackage[english]{babel}
+\usepackage[]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+    \dagger
+    \or % 2
+     \dagger 
+    \or % 3  
+     \dagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+\begin {document}
+\begin{spacing}{1.5}
+\begin{center}
+\small
+\textbf{ELEC 5360 Homework 1}\\ Hongzi Mao 2002 5238\\
+\end{center}
+\normalsize
+~\\
+1. (a)\\
+Note that the Q function is given by: $$ Q(x) = \int_x^\infty \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dx $$
+By Chernott bound: $$ Q(x)\leq E(e^{\widetilde{v}(X-x)})) $$
+where $\widetilde{v}$ satisfies $$E(X e^{\widetilde{v} X}) = x E(e^{\widetilde{v} X})$$
+Now $$ E(e^{\widetilde{v} X}) = \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}}e^{-t^2/2}e^{\widetilde{v} t} dt = e^{\widetilde{v}^2/2} $$
+While $$E(X e^{\widetilde{v}^2/2}) = \frac{d}{d \widetilde{v}} E(e^{\widetilde{v} X}) = \widetilde{v} e^{\widetilde{v}^2/2} $$
+Thus $$ \widetilde{v} e^{\widetilde{v}^2/2} = x e^{\widetilde{v}^2/2} $$
+$$ \widetilde{v} = x $$
+Now \begin{align*}
+ Q(x) &\leq E(e^{x (X - x)}) \\
+& = e^{-x^2} E(e^{x X})\\
+& = e^{-x^2} \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}} e^{-t^2/2} e^{x t} dt\\
+& = e^{-x^2} e^{x^2/2}\\
+& = e^{-x^2/2}
+\end{align*}
+~\\
+(b)\\
+Integration by part gives \begin{align*}
+Q(x) &= \int_x^\infty \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt\\
+&= \int_x^\infty t \frac{1}{t} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt\\
+&= -\frac{1}{\sqrt{2\pi}} \frac{1}{t} e^{-t^2/2}\Big|_x^\infty - \int_x^\infty -\frac{1}{\sqrt{2\pi}} (- \frac{1}{t^2})e^{-t^2/2} dt\\
+&= \frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2} -  \int_x^\infty \frac{1}{t^2} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt
+\end{align*}
+Drop the second term, which is a positive number, we get
+$$ Q(x) < \frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$$
+Instead, if we apply integration by part on the second term  \begin{align*}
+\int_x^\infty \frac{1}{t^2} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt &= \int_x^\infty t \frac{1}{t^3} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt\\
+&= -\frac{1}{\sqrt{2\pi}} \frac{1}{t^3} e^{-t^2/2}\Big|_x^\infty - \int_x^\infty -\frac{1}{\sqrt{2\pi}} (- \frac{3}{t^4})e^{-t^2/2} dt\\
+&= \frac{1}{x^2\sqrt{2\pi x^2}} e^{-x^2/2} -  \int_x^\infty \frac{3}{t^4} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt
+\end{align*}
+Substitute back to the result obtained before
+$$ Q(x) = (1-\frac{1}{x^2})\frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2} + \int_x^\infty \frac{3}{t^4} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt$$
+Drop the last term, which is a positive number, we get
+$$ Q(x) > (1-\frac{1}{x^2})\frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$$
+~\\
+\pagebreak
+~\\
+(c)\\
+Substitute $ t= y + x $ in the Q function,  \begin{align*}
+Q(x) &= \int_x^\infty \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt\\
+&= -\frac{1}{\sqrt{2\pi}} \int_0^\infty e^{-(y+x)^2/2} dy\\
+&=-\frac{1}{\sqrt{2\pi}} e^{-x^2/2}\int_0^\infty e^{-y^2/2 -xy} dy
+\end{align*}
+Now to show the upper and lower bound of Q function in (b), we only need to show
+$$ \frac{1}{x} -\frac{1}{x^3} < \int_0^\infty e^{-y^2/2 -xy} dy < \frac{1}{x} $$
+Notice that since $-y^2/2 \leq 0$
+$$ e^{-y^2/2} \leq 1 $$
+Also by Taylor series, for $x > 0$
+$$e^{-x} = 1 - x + x^2 + o(x^3) \geq 1 - x $$
+Thus
+$$e^{-y^2/2} \geq 1-y^2/2$$
+Hence 
+$$\int_0^\infty (1-y^2/2)e^{-xy} dy \leq \int_0^\infty e^{-y^2/2 -xy} dy \leq \int_0^\infty e^{-xy} dy\\$$
+At this point, notice that
+$$ \int_0^\infty e^{-xy} dy = -\frac{1}{x} e^{-xy}\Big|_0^\infty =\frac{1}{x} $$
+Also from integration by part\begin{align*}
+\int_0^\infty \frac{y^2}{2} e^{-xy} dy &=  -\frac{1}{x} \frac{y^2}{2} e^{-xy}\Big|_0^\infty - \int_0^\infty -\frac{1}{x} y e^{-xy} dy\\
+&= \int_0^\infty -\frac{y}{x} e^{-xy} dy\\
+&=  -\frac{y}{x^2} e^{-xy}\Big|_0^\infty - \int_0^\infty -\frac{1}{x^2} e^{-xy} dy\\
+&= \frac{1}{x^2}\int_0^\infty e^{-xy} dy\\
+&= \frac{1}{x^3}
+\end{align*}
+Hence this leads to
+$$ \frac{1}{x} -\frac{1}{x^3} < \int_0^\infty e^{-y^2/2 -xy} dy < \frac{1}{x} $$
+which completes the proof.
+\end {spacing}
+~\\
+~\\
+2. (a)\\
+~\\
+Notice $$log_2(1+|h|^2 \gamma) < R$$
+is equivalent to $$ -\sqrt{\frac{2^R-1}{\gamma}}<|h|<\sqrt{\frac{2^R-1}{\gamma}}$$
+Since $h \sim C\mathcal{N}(0,1)$, $|h|$ follows \emph{Rayleigh distribution} as 
+$$ Pr(|h|) = |h| e^{-|h|^2/2}$$
+Therefore (note $ |h| \geq 0$) \begin{align*}
+ P_{out} (R) &= \int_0^{\sqrt{\frac{2^R-1}{\gamma}}} r e^{-r^2/2} dr\\
+  &= -e^{-r^2/2}\Big|_0^{\sqrt{\frac{2^R-1}{\gamma}}}\\
+  &= 1-e^{-\frac{2^R-1}{\gamma}/2}
+\end{align*}
+~\\
+\pagebreak
+~\\
+(b)\\
+Notice that $$\frac{1}{L}\sum\limits_{l=1}^L log_2(1+|h_l|^2\gamma)\leq R$$
+is equivalent to  $$\frac{1}{L}\sum\limits_{l=1}^L -log_2(1+|h_l|^2\gamma)\geq R$$
+By Jensen inequality, as $-log_2(x)$ is convex, 
+\begin{align*}
+\frac{1}{L}\sum\limits_{l=1}^L log_2(1+|h_l|^2\gamma) &\geq -log_2 (\sum\limits_{l=1}^L \frac{1}{L}(1+|h_l|^2\gamma))\\
+&= -log_2(1+\frac{\gamma}{L} \sum\limits_{l=1}^L |h_l|^2)\\
+&\geq -log_2(1+\gamma (\sum\limits_{l=1}^L \frac{1}{L}|h_l|)^2)\\
+&= -log_2(1+\frac{\gamma}{L^2} (\sum\limits_{l=1}^L|h_l|)^2)
+\end{align*}
+Now $$Pr\{ -log_2(1+\frac{\gamma}{L^2} (\sum\limits_{l=1}^L|h_l|)^2) \leq R\} $$
+will give a lower bound for the original outage probability $P_{out}(R)$\\
+~\\
+However, the analytic solution for sum of Rayleigh distribution does not exist. An approximation is adopted from Hu et al., \textbf{Accurate Simple Closed-Form Approximations to Rayleigh Sum Distributions and Densities}, \emph{IEEE Communication Letter, Vol 9, No. 2, Feb 2005}. \\
+~\\
+The pdf of sum of Rayleigh distribution is approximately given by $$ f_{sum} = \frac{t^{2L-1}e^{-t^2/2b}}{2^{L-1}b^{L}(L-1)!}$$
+where $$b = \frac{1}{L}((2L-1)!!)^{1/2}$$
+Hence, the lower bound calculated based on this method will be $$\int_0^{\sqrt{\frac{L^2 (2^R-1)}{\gamma}}}f_{sum} dt  $$
+which is $$ - \frac{2^(L+1) b^L}{(L-1)!} \Gamma(2L, \frac{t}{2b}) \Big|_0^{\sqrt{\frac{L^2 (2^R-1)}{\gamma}}}$$
+~\\
+~\\
+3. (a)\\
+Notice that \begin{align*}
+Pr\{ (-1)^{N(t)} = 1\} &= Pr\{N(t)\; is \; even\}\\
+&=e^{-\lambda t} (1 + \frac{(\lambda t)^2}{2!} + \frac{(\lambda t)^4}{4!}+ ...)\\
+&= e^{-\lambda t} (\frac{\sum\limits_{m=0}^\infty \frac{(\lambda t)^m}{m!} + \sum\limits_{m=0}^\infty \frac{(-\lambda t)^m}{m!}}{2})\\
+&= e^{-\lambda t} (\frac{e^{\lambda t} + e^{-\lambda t}}{2})\\
+&= e^{-\lambda t} cosh(\lambda t)\\
+\end{align*}
+Likewise, \begin{align*}
+Pr\{ (-1)^{N(t)} = -1\} &= Pr\{N(t)\; is \; odd\}\\
+&=e^{-\lambda t} (\frac{(\lambda t)^1}{1!} + \frac{(\lambda t)^3}{3!}+ ...)\\
+&= e^{-\lambda t} (\frac{e^{\lambda t} - e^{-\lambda t}}{2})\\
+&= e^{-\lambda t} sinh(\lambda t)\\
+\end{align*}
+Also note that $R(t, s) = E(X(t), X(s))$ is independent with sign of $X_0$, as $X_0^2 = 1$ anyway.\\
+~\\
+Now, utilizing the \emph{memoryless property} of \emph{Poisson Process}, the conditional probability depends \emph{only} on whether the sign is flipped or not, then we will have \\
+\begin{align*}
+Pr\{X(t) X(s) = 1\} & = Pr\{X(s) = 1\} Pr\{X(t) = 1 | X(s) = 1\}\\
+&+   Pr\{X(s) = -1\} Pr\{X(t) = -1 | X(s) = -1\}\\
+\\
+&=e^{-\lambda s} cosh(\lambda s) e^{-\lambda (t-s)} cosh(\lambda (t-s))\\
+&+e^{-\lambda s} sinh(\lambda s) e^{-\lambda (t-s)} cosh(\lambda (t-s))\\
+\end{align*}
+Likewise, \begin{align*}
+Pr\{X(t) X(s) = -1\} & = Pr\{X(s) = 1\} Pr\{X(t) = -1 | X(s) = 1\}\\
+&+   Pr\{X(s) = -1\} Pr\{X(t) = 1 | X(s) = -1\}\\
+\\
+&=e^{-\lambda s} cosh(\lambda s) e^{-\lambda (t-s)} sinh(\lambda (t-s))\\
+&+e^{-\lambda s} sinh(\lambda s) e^{-\lambda (t-s)} sinh(\lambda (t-s))\\
+\end{align*}
+These are the only two probabilities of the value of $X(t)X(s)$, hence the pdf of $X(t)X(s)$ is \emph{delta function}.\\
+~\\
+Therefore \begin{align*}
+R(s,t) &= E(X(s)X(t)) = \int_{-\infty}^\infty \int_{-\infty}^\infty ProbFunc\; (\delta(x_s\pm 1)\delta(x_t \pm 1)) d x_s d x_t\\
+\end{align*}
+where the $ProbFunc$ equals to the expression discussed above when $x_s$ and $x_t$ equal to corresponding values, otherwise, 0.\\
+~\\
+Hence\begin{align*}
+R(s,t) &= e^{-\lambda s} cosh(\lambda s) e^{-\lambda (t-s)} cosh(\lambda (t-s))\\
+&+ e^{-\lambda s} sinh(\lambda s) e^{-\lambda (t-s)} cosh(\lambda (t-s))\\
+&-e^{-\lambda s} cosh(\lambda s) e^{-\lambda (t-s)} sinh(\lambda (t-s))\\
+&-e^{-\lambda s} sinh(\lambda s) e^{-\lambda (t-s)} sinh(\lambda (t-s))\\
+\\
+&= e^{-2\lambda (s-t)}
+\end{align*}
+~\\
+(b)\\
+Notice that the above random process yields wide-sense stationary, the power spectral density will be (we denote $|s-t|$ to be $\tau$)
+\begin{align*}
+S_X(f) & = \mathcal{F}(R(\tau))\\
+&= \int_{-\infty}^\infty e^{-2\lambda |\tau|} e^{-i f \tau} d\tau\\
+& = \int_{-\infty}^0 e^{2\lambda \tau} e^{-i f \tau} d\tau +\int_0^\infty e^{-2\lambda \tau} e^{-i f \tau} d\tau\\
+&= \frac{1}{2\lambda - i f} + \frac{1}{2\lambda + i f} \\
+&= \frac{4 \lambda}{4\lambda^2 + f^2}
+\end{align*}
+~\\
+4. (a)\\
+\emph{step 1} \\
+P1 \; 0.3365 \\
+P2 \; 0.3365 \\
+P3 \; 0.1635 \; 0\\
+P4 \; 0.1635 \; 1\\
+\emph{combined probability: 0.1635+0.1635 = 0.327}\\
+~\\
+\emph{step 2} \; (notice 0.327 $<$ 0.3365)\\
+P1 \; 0.3365 \\
+P2 \; 0.3365 \;  \: 1\\
+P3 \; 0.1635 \; 00\\
+P4 \; 0.1635 \; 10\\
+\emph{combined probability: 0.327+0.3365 = 0.6635}\\
+~\\
+\emph{step 3}\\
+P1 \; 0.3365 \: \: \: 1\\
+P2 \; 0.3365 \; \: 10\\
+P3 \; 0.1635 \; 000\\
+P4 \; 0.1635 \; 100\\
+\emph{combined probability: 0.6635+0.3365 = 1}\\
+~\\
+Hence, a possible Huffman code is\\
+\emph{Sympble} \; \; \emph{codeword}\\
+P1\; \;  \; \; \; \; \; 1\\
+P2\; \;  \; \; \; \; \; 01\\
+P3\; \;  \; \; \; \; \; 000\\
+P4\; \;  \; \; \; \; \; 001\\
+~\\
+(b)\\
+Average number of binary digit per source level is
+$$ 1\times 0.3365 + 2 \times 0.3365 + 3 \times 0.327 = 1.9905 $$
+~\\
+(c)\\
+The entropy $H(X)$ is as follows\\
+\begin{align*}
+\sum\limits_{i=1}^4 -p_i log_2(p_i)&= -2 \times 0.3365\;log_2(0.3365) - 2 \times 0.1635\;log_2(0.1635)\\
+&= 1.9118\\
+\end{align*}
+~\\
+~\\
+5. \\
+By Lempel-Ziv Algorithm, the original binary sequence will be separated as follows, \\
+~\\
+0, 00, 1, 001, 000, 0001, 10, 00010, 0000, 0010, 00000, 101, 00001, 000000, 11, 01, 0000000, 110, 0\\
+~\\
+There are \emph{19} phrases in total, therefore, we need $\lceil log_2(19) \rceil = 5$ bits for position representation. Hence the dictionary construction is as follows,\\
+~\\
+~\\
+\begin{tabular}{l l l l}
+  Dictionary Location& Location in binary & Original content &  LZ codeword\\
+  \\
+  1 & 00001 & 0 & 000000\\
+  2 & 00010 & 00 & 000010\\
+  3 & 00011 & 1 & 000001\\
+  4 & 00100 & 001 & 000101\\
+  5 & 00101 & 000& 000100\\
+  6 & 00110 & 0001 & 001011\\
+  7 & 00111 & 10 & 000110\\
+  8 & 01000 & 00010 & 001100\\
+  9 & 01001 & 0000 & 001010\\
+  10 & 01010 & 0010 & 001000\\
+  11 & 01011 & 00000 & 010010\\
+  12 & 01100 & 101 & 001111\\
+  13 & 01101 & 00001 & 010011\\
+  14 & 01110 & 000000 & 010110\\
+  15 & 01111 & 11 & 000111\\
+  16& 10000 & 01 & 000011\\
+  17 & 10001 & 000000 & 011100\\
+  18 & 10010 & 110 & 011110\\
+  19 & 10011 & 0 & 00000\\
+\end{tabular}
+~\\
+~\\
+~\\
+The LZ source code is the concatenation of each of the LZ codeword in the tabular above. \\
+~\\
+For decode LZ code back to original code, the decoder will separate the incoming source code into blocks with size 6 (except the last one). The dictionary can be built up as the source code coming and the original content can be decoded accordingly.\\
+\end {document}
