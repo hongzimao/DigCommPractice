@@ -1,0 +1,214 @@
+\documentclass [12pt] {article}
+\usepackage[top=1in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[export]{adjustbox}
+\usepackage[english]{babel}
+\usepackage[]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+    \dagger
+    \or % 2
+     \dagger 
+    \or % 3  
+     \dagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+\begin {document}
+\begin{spacing}{1.5}
+\begin{center}
+\small
+\textbf{ELEC 5360 Homework 2}\\ Hongzi Mao 2002 5238\\
+\end{center}
+\normalsize
+~\\
+1. \\
+The initial value of $a_{i}$ determines $b_{i}$ as follows:
+\begin{align*}
+b_1 & = \frac{a_1+a_2}{2} = 0.4\\
+b_2 & = \frac{a_2+a_3}{2} = 0.65\\
+b_3 & = \frac{a_3+a_4}{2} = 0.8
+\end{align*}
+According to \emph{Lloyd-Max Algorithm},
+\begin{align*}
+a_1 & = \frac{\int_{b_0}^{b_1} x f_X(x) dx}{\int_{b_0}^{b_1} f_X(x) dx} = \frac{\int_{0}^{0.4} x (-2x+2) dx}{\int_{0}^{0.4} -2x+2 \;dx} = \frac{-2/3 x^3 +x^2 \Big|_0^{0.4}}{-x^2 + 2x \Big|_0^{0.4}} = \frac{11}{60}\\
+a_2 & = \frac{\int_{b_1}^{b_2} x f_X(x) dx}{\int_{b_1}^{b_2} f_X(x) dx} = \frac{\int_{0.4}^{0.65} x (-2x+2) dx}{\int_{0.4}^{0.65} -2x+2 \;dx} = \frac{-2/3 x^3 +x^2 \Big|_{0.4}^{0.65}}{-x^2 + 2x \Big|_{0.4}^{0.65}} = \frac{293}{570}\\
+a_3 & = \frac{\int_{b_2}^{b_3} x f_X(x) dx}{\int_{b_2}^{b_3} f_X(x) dx} = \frac{\int_{0.65}^{0.8} x (-2x+2) dx}{\int_{0.65}^{0.8} -2x+2 \;dx} = \frac{-2/3 x^3 +x^2 \Big|_{0.65}^{0.8}}{-x^2 + 2x \Big|_{0.65}^{0.8}} = \frac{79}{110}\\
+a_4 & = \frac{\int_{b_3}^{b_4} x f_X(x) dx}{\int_{b_3}^{b_4} f_X(x) dx} = \frac{\int_{0.8}^{1} x (-2x+2) dx}{\int_{0.85}^{1} -2x+2 \;dx} = \frac{-2/3 x^3 +x^2 \Big|_{0.8}^{1}}{-x^2 + 2x \Big|_{0.8}^{1}} = \frac{13}{15}
+\end{align*}
+New $b_{i}$ can be then calculated accordingly,
+\begin{align*}
+b_1 & = \frac{a_1+a_2}{2} = \frac{53}{152}\\
+b_2 & = \frac{a_2+a_3}{2} = \frac{3863}{6270}\\
+b_3 & = \frac{a_3+a_4}{2} = \frac{523}{600}
+\end{align*}
+~\\
+2. (a)\\
+To check the orthogonality, we look into
+ \begin{align*}
+\int_{0}^{4} f_{1}(t)f_{2}^{*}(t) dt & = \int_{0}^{2} \frac{1}{2}\frac{1}{2} dt + \int_{2}^{4} \frac{1}{2}(-\frac{1}{2}) dt = -\frac{2}{4} + \frac{2}{4} = 0\\
+\int_{0}^{4} f_{1}(t)f_{3}^{*}(t) dt & = \int_{0}^{1} \frac{1}{2}\frac{1}{2} dt + \int_{1}^{2} \frac{1}{2}(-\frac{1}{2}) dt + \int_{2}^{3} \frac{1}{2}\frac{1}{2} dt  +\int_{3}^{4} \frac{1}{2}(-\frac{1}{2}) dt = \frac{1}{4} - \frac{1}{4} +  \frac{1}{4} - \frac{1}{4} = 0\\
+\int_{0}^{4} f_{1}(t)f_{3}^{*}(t) dt & = \int_{0}^{1} \frac{1}{2}\frac{1}{2} dt + \int_{1}^{2} \frac{1}{2}(-\frac{1}{2}) dt + \int_{2}^{3} (-\frac{1}{2})\frac{1}{2} dt  +\int_{3}^{4} (-\frac{1}{2})(-\frac{1}{2}) dt = \frac{1}{4} - \frac{1}{4} -  \frac{1}{4} + \frac{1}{4} = 0
+\end{align*}
+To check the normality, we look into
+ \begin{align*}
+\int_{0}^{4} f_{1}(t)f_{1}^{*}(t) dt & = \int_{0}^{4} \frac{1}{2}\frac{1}{2} dt  = \frac{4}{4} = 1\\
+\int_{0}^{4} f_{2}(t)f_{2}^{*}(t) dt & = \int_{0}^{2} \frac{1}{2}\frac{1}{2} dt + \int_{2}^{4} (-\frac{1}{2})(-\frac{1}{2}) dt  = \frac{2}{4} + \frac{2}{4} = 1\\
+\int_{0}^{4} f_{3}(t)f_{3}^{*}(t) dt & = \int_{0}^{1} \frac{1}{2}\frac{1}{2} dt + \int_{1}^{2} (-\frac{1}{2})(-\frac{1}{2}) dt + \int_{2}^{3} \frac{1}{2}\frac{1}{2} dt  +\int_{3}^{4} (-\frac{1}{2})(-\frac{1}{2}) dt = \frac{1}{4} + \frac{1}{4} +  \frac{1}{4} + \frac{1}{4} = 1
+\end{align*}
+Hence the bases are orthonormal to each other. \\
+~\\
+(b)\\
+Assume $x(t)$ can be decomposed into the set of bases defined above, then
+$$ x(t) = a_1 f_1(t) + a_2 f_2(t) + a_3 f_3(t) $$
+Now
+ \begin{align*}
+a_1 = \int_{0}^{4} x(t)f_{1}^{*}(t) dt & = \int_{0}^{1} (-1)\frac{1}{2} dt + \int_{1}^{3} 1\frac{1}{2} dt  + \int_{3}^{4} (-1)\frac{1}{2} dt  = -\frac{1}{2} + \frac{2}{2} - \frac{1}{2} = 0\\
+a_2 = \int_{0}^{4} x(t)f_{2}^{*}(t) dt & = \int_{0}^{1} (-1)\frac{1}{2} dt + \int_{1}^{2} 1\frac{1}{2} dt  + \int_{2}^{3} 1(-\frac{1}{2}) dt + \int_{3}^{4} (-1)(-\frac{1}{2}) dt  = -\frac{1}{2} + \frac{1}{2} - \frac{1}{2} + \frac{1}{2} = 0\\
+a_3 = \int_{0}^{4} x(t)f_{3}^{*}(t) dt & = \int_{0}^{1} (-1)\frac{1}{2} dt + \int_{1}^{2} 1(-\frac{1}{2}) dt  + \int_{2}^{3} 1\frac{1}{2} dt + \int_{3}^{4} (-1)(-\frac{1}{2}) dt  = -\frac{1}{2} - \frac{1}{2} + \frac{1}{2} + \frac{1}{2} = 0
+\end{align*}
+All the coefficients are 0, which means the signal doesn't live in the space span by the bases. \\
+~\\
+3. (a)\\
+According to \emph{Gram-Schemidt method}, denote $m_{i}$ to be the waveform after removing components of constructed bases, and $x_{i}$ to be the normalized waveform basis. 
+\begin{align*}
+m_1(t) &= s_1(t)\\
+x_1(t) &= m_1(t) * \frac{1}{\int_0^T m_1(t)dt} =  m_1(t) * \frac{1}{\int_0^{T/3} 1 \;dt} = \frac{3}{T} s_1(t)\\ 
+m_2(t) &= s_2(t)-[\int_0^T s_2(t)x_{1}^{*}(t)]x_1(t) = s_2(t) - \frac{T}{3} x_1(t)\\
+x_2(t) &= m_2(t) * \frac{1}{\int_0^T m_2(t)dt} =  m_1(t) * \frac{1}{\int_{T/3}^{2T/3} 1 \;dt} = \frac{3}{T}( s_2(t) - s_1(t))\\ 
+m_3(t) &= s_3(t)-[\int_0^T s_3(t)x_{1}^{*}(t)]x_1(t)-[\int_0^T s_3(t)x_{2}^{*}(t)]x_2(t) = s_3(t) - \frac{T}{3} x_2(t)\\
+x_3(t) &= m_3(t) * \frac{1}{\int_0^T m_3(t)dt} =  m_3(t) * \frac{1}{\int_{2T/3}^{T} 1 \;dt} = \frac{3}{T}( s_3(t) - s_2(t) + s_1(t))\\ 
+m_4(t) &= s_4(t)-[\int_0^T s_4(t)x_{1}^{*}(t)]x_1(t)-[\int_0^T s_4(t)x_{2}^{*}(t)]x_2(t) -[\int_0^T s_4(t)x_{3}^{*}(t)]x_3(t)\\
+&= s_4(t) - \frac{T}{3} x_1(t) - \frac{T}{3} x_2(t) - \frac{T}{3} x_3(t) = 0\\
+\end{align*}
+So the there are 3 orthonormal bases for these 4 signals.\\
+\begin{align*}
+x_1(t) &= 
+\begin{cases}
+    \frac{3}{T}, & \text{if } 0\leq t \leq \frac{T}{3}\\
+    0,              & \text{otherwise}
+\end{cases}\\
+x_2(t) &= 
+\begin{cases}
+    \frac{3}{T}, & \text{if } \frac{T}{3}\leq t \leq \frac{2T}{3}\\
+    0,              & \text{otherwise}
+\end{cases}\\
+x_3(t) &= 
+\begin{cases}
+    \frac{3}{T}, & \text{if } \frac{2T}{3}\leq t \leq T\\
+    0,              & \text{otherwise}
+\end{cases}
+\end{align*}
+~\\
+~\\
+(b)\\
+In general, for $i=1,2,3,4$
+$$ s_i(t) = \sum_{j=1}^{3}[\int_0^T s_i(t)x_j^*(t)]x_{j}(t)$$
+Hence,
+\begin{align*}
+s_1(t) &= \frac{T}{3} x_1(t)\\
+s_2(t) &= \frac{T}{3} x_1(t) +\frac{T}{3} x_2(t)\\
+s_3(t) &= \frac{T}{3} x_2(t) + \frac{T}{3} x_3(t)\\
+s_4(t) &= \frac{T}{3} x_1(t) + \frac{T}{3} x_2(t) + \frac{T}{3} x_3(t)
+\end{align*}
+~\\
+~\\
+4. (a)\\
+$g(t)$ must satisfy \emph{No inter-symobol interference} property, namely, 
+$$ g(jT-kT)=\begin{cases}
+    1, & \text{if } j=k\\
+    0,              & \text{otherwise}
+\end{cases}\\$$
+\emph{Nyquist criteria}, in formal, states that\\
+$$ \sum_{m \in \mathbb{Z}} \hat{g}(f-m/T)rect(fT) = T \: rect(fT)$$\\
+In this case, it can be simplified to
+$$ \frac{1}{T} \sum_{m \in \mathbb{Z}} \hat{g}(f-m/T) = 1$$
+~\\
+\pagebreak
+~\\
+(b)\\
+According to \emph{Nyquist criteria}, and $T = 1/2$
+$$ \sum_{m} \hat{g}(f-2m) = \frac{1}{2}$$
+Now we look into $|f|\leq 2$, since
+$$\hat{g}(f) = \hat{p}(f)\hat{h}(f)\hat{q}(f)$$
+When $|f|\leq 0.6$, we will have
+$$\hat{q}(f) = \frac{1}{2\hat{p}(f)\hat{h}(f)}$$
+Hence
+$$ 
+\hat{q}(f) = \begin{cases}
+    1, & \text{if } |f| \leq 0.5\\
+    \frac{1}{3-2|f|},              & 0.5 \leq |f| \leq 0.6
+\end{cases}\\
+$$
+Notice that the values of $\hat{q}(f)$ in region $0.6 \leq |f| \leq 2$ can be any value because $\hat{h}(f) = 0$ there anyway.\\
+~\\
+(c)\\
+If $\hat{h}(f)\hat{q}(f)=0$ then $\hat{g}(f)=0$, which means the \emph{Nyquist criteria} does not hold.\\
+~\\
+Hence, in order to avoid inter-symbol interference, \\
+for each$ 0 \leq f \leq 1/(2T)$, $$\exists m \in \mathbb{Z}, \text{such that} \; \hat{h}(f-m/T)\hat{p}(f-m/T) \neq 0$$
+~\\
+\pagebreak
+~\\
+5. (a)\\
+Notice that  $V_i = \int \phi_i(t)Z(t)dt$ is a Gaussian random variable.\\
+Also, with Spectral density $S_Z(f)= N_0/2$, we have $$ E(V_i ^2) = \int_{-\infty}^{\infty}|\phi_i(t)|^2 S_Z(f) dt$$
+Since $\{\phi_i(t)\}$ is set of orthonormal functions, we have 
+$$ \int_{-\infty}^{\infty}|\phi_i(t)|^2 dt = \int_{-\infty}^{\infty}\phi_i(t) \phi_i^*(t) dt = 1$$
+Therefore, we have $E(V_i^2) = N_0/2$.
+Then we have $$\sigma_i^2 = E(V_i^2) - E(V_i)^2 = N_0/2 $$
+Hence, we have the distribution for $V_i$
+$$ V_i\sim \mathcal{N}(0, \frac{N_0}{2})$$
+~\\
+(b)\\
+Notice that  
+$$Y= \int_0^T Z(t)dt = \int_{-\infty}^{\infty} g(t)Z(t)dt $$
+where
+$$
+g(t) = \begin{cases}
+    1, & \text{if } 0 \leq t \leq T\\
+    0,  & \text{otherwise}
+\end{cases}\\
+$$
+and $Y$ is a Gaussian random variable.\\
+~\\
+Now, notice that
+$$  E(V_i ^2) = \int_{-\infty}^{\infty}|g(t)|^2 S_Z(f) dt = \int_0^T S_Z(f) dt =  \frac{N_0}{2}T$$
+Then we have
+$$\sigma_Y^2 = E(Y^2) - E(Y)^2 = \frac{N_0}{2}T $$
+$$ Y\sim \mathcal{N}(0, \frac{N_0}{2}T)$$
+~\\
+
+\end{spacing}
+\end {document}
