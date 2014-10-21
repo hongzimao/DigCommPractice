@@ -1,0 +1,142 @@
+\documentclass [12pt] {article}
+\usepackage[top=0.9in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[export]{adjustbox}
+\usepackage[english]{babel}
+\usepackage[]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{multicol}
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+    \dagger
+    \or % 2
+     \dagger 
+    \or % 3  
+     \dagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+\begin {document}
+\begin{spacing}{1.5}
+\begin{multicols}{2}
+\noindent
+\textbf{Q function}: $ Q(x) = \int_x^\infty \frac{1}{\sqrt{2\pi}}e^{t^2/2}dt$\\
+Transform a Gaussian Distribution to Normal Distribution:\\
+$F_X \sim \mathcal{N}(m,\sigma^2)$\\
+$F_X(x) = \Phi (\frac{x-m}{\sigma})$, where $\Phi \sim \mathcal{N}(0,1)$\\
+$Tail(x) = Q(\frac{x-m}{\sigma})$\\
+~\\
+Some bounds: $Q(x) \leq e^{-x^2/2}$\\
+$Q(x) < \frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$\\
+$Q(x) > (1-\frac{1}{x^2})\frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$\\
+$Q(x)\leq\frac{1}{2}e^{-x^2/2}$\\
+~\\
+\textbf{Markov Inequality}: $P(x\leq a)\leq \frac{E(x)}{a}$\\
+\textbf{Chebyshv Inequality}: $P(|x-m|\leq a) \leq \frac{\sigma^2}{a^2}$\\
+\textbf{Chernoff Bound}: $P(X\leq a) \leq e^{-\widetilde{v}a}E(e^{\widetilde{v}X})$\\
+Chernoff Bound holds for $\widetilde{v} > 0$, the \emph{tightest} bound achieves when\\
+$\frac{d}{d\widetilde{v}}(E(e^{\widetilde{v}X})) = E(Xe^{\widetilde{v}X}) = a E(e^{\widetilde{v}X})$\\
+~\\
+\textbf{Poisson Process}: $Pr(N(t) = k) = \frac{(\lambda t)^k}{k !} e^{-\lambda t}$\\
+$N(t)$ stands for number of occurrence, and this is a \emph{memoryless} process. \\
+~\\
+\textbf{Real Gaussian Vector} \\ $\vec{w} \sim \mathcal{N}(0, I)$\\
+Definition: $P(\vec{w}) = \frac{1}{(\sqrt{2\pi})^n} e^{-(\frac{||w||^2}{2})}$\\
+Each definition of $\vec{w}$ follows $\mathcal{N}(0,1)$\\
+For $\vec{x} = A\vec{w} + \vec{b}$ \\
+$p(\vec{x}) = \frac{1}{(\sqrt{2\pi})^n\sqrt{det(A^T A)}}e^{\frac{1}{2}(\vec{x}-\vec{b})^{T}(A^T A)^{-1}(\vec{x}-\vec{b})}$\\
+Moreover $\vec{x} \sim \mathcal{N}(\vec{b}, A A^T)$\\
+And $\forall \vec c \in \mathcal{R}^n$, $\vec{c}^T \vec{x} \sim \mathcal{N}(\vec{c}^T \vec{b}, \vec{c}^T A A^T \vec{c})$\\
+~\\
+\textbf{Complex Random Variable}\\
+ $x \sim C\mathcal{N}(0,1)$ (or $x \sim C\mathcal{N}(0,\sigma^2)$)\\
+ \emph{Real} and \emph{Imaginary} components yields \\
+ $Re, Im\sim \mathcal{N}(0, 1/2)$ (or $Re, Im\sim \mathcal{N}(0, \sigma^2 /2)$)\\
+ The \emph{angle} is uniformly distributed on $[0, 2\pi)$\\
+ $|x|$ follows \emph{Rayleigh} Distribution\\
+ $P(r) = 2r e^{-r^2}$ for $C\mathcal{N}(0,1)$\\
+ (or $P(r) = \frac{r}{\sigma_0^2} e^{\frac{-r^2}{2\sigma_0^2}}$ for $C\mathcal{N}(0, \sigma^2)$, \\
+ $\sigma_0^2 =\sigma^2/2$ is for $Re$ and $Im$ component)\\
+ ~\\
+ \textbf{Relations between different distributions}\\
+For $X_1 \sim \mathcal{N}(m_1, \sigma^2)$, $X_2 \sim \mathcal{N}(m_2, \sigma^2)$\\
+If $m_1 = m_2 = 0$, $X = \sqrt{X_1^2 + X_2 ^2}$ follows \emph{Rayleigh} Distribution, $p(x) = \frac{x}{\sigma^2} e^{\frac{-x^2}{2\sigma^2}}, x>0$\\
+If $m_1, m_2 >0$, $X$ follows \emph{Ricean} Distribution, $p(x) = \frac{x}{\sigma ^2}I_0(\frac{s x}{\sigma^2})e^{-\frac{x^2+s^2}{2\sigma^2}}$, where $s = \sqrt{m_1^2 + m_2^2}$, $I_0(x) = \frac{1}{2\pi}\int_0^{2\pi}e^{x cos \theta} d\theta$\\ 
+~\\
+For $Z_i \sim \mathcal{N}(0,1)$, then $\sum_{i=1}^{k} Z_i^2$ follows \emph{Chi-Square} distribution with \emph{degree of freedom} k. $p(x,k) = \frac{x^{(k/2-1)}e^{-x/2}}{2^{k/2}\Gamma(k/2)}, x>0$. \\
+($p(x,1) = \frac{e^{-x/2}}{\sqrt{2x\pi}}, \\
+\Gamma(t) = \int_0^\infty x^{t-1}e^{-x}dt, \Gamma(t) = t!$ if $t$ is integer)\\
+~\\
+\emph{Nakagami} Random Variable is typical for Fading Channel.\\
+$p(x) = \frac{2}{\Gamma(m)}(\frac{m}{\Omega})^m x^{2m-1}e^{-m x^2/\Omega}, x>0$, where $\Omega = E(x^2)$, and $m = \frac{\Omega^2}{E[(x^2-\Omega)^2]}, m \leq 1/2$, called fading figure. \\
+~\\
+\textbf{Lloyd-Max Algorithm}\\
+Notice $b_0 = 0, b_n = \infty$, update algorithm: \\
+\emph{representation} point $a_i = \frac{\int_{b_{i-1}}^{b_i}x f_X(x)dx}{\int_{b_{i-1}}^{b_i}f_X(x)dx}$, \\
+which is basically the distribution `center'\\
+and the \emph{endpoint} $b_i = \frac{a_{i-1} + a_{i}}{2}$\\
+~\\
+\textbf{Nyquist Criterion}\\
+$g(t)$ satisfies no \emph{inter-symbol interference} property\\
+$ g(jT-kT)=\begin{cases}
+    1, & \text{if } j=k\\
+    0,              & \text{otherwise}
+\end{cases}\\$
+in frequency domain, \\
+$ \sum_{m \in \mathbb{Z}} \hat{g}(f-m/T)rect(fT) = T \: rect(fT)$\\
+which can be simplified to \\
+$ \frac{1}{T} \sum_{m \in \mathbb{Z}} \hat{g}(f-m/T) = 1$\\
+~\\
+\textbf{Gaussian Process}\\
+Definition: $\{ Z(t)\}$, for $i$ in a finite set of $\{ n \}$, $\{Z(t_i)\}$ are jointly Gaussian set of r.v.\\
+Basically \emph{i.i.d. Gaussian r.v.} on each time instance.\\
+~\\
+Let $\{ Z(t)\}$ be White Gaussian Noise Process. \\
+$V = \int g(t) Z(t) dt $ will be Gaussian r.v. with zero mean.\\
+Notice from \emph{Linear Functional of WSS process}\\
+$E[V^2] = \int_{-\infty}^{\infty} |\hat{g}(f)|^2 S_Z(f) df$, \\
+where $S_Z(f)$ is spectral density.\\
+~\\
+Now note that $\sigma^2 = E[V^2] - E[V]^2$\\
+Typically, $E[V] = E[\int g(t) Z(t) dt ] = 0$, \\
+because Z is zero-mean\\
+$E[V^2] = E[\int g(t) Z(t) dt \int g(\tau) Z(\tau) d\tau ]$\\
+$ =\int \int E[Z(t)Z(\tau)] g(t) g(\tau) dt d\tau $\\
+$=\int \int \frac{N_0}{2}\delta(t-\tau) g(t) g(\tau) dt d\tau $\\
+(This is because the gaussian r.v. on different time are independent, and $E(Z^2)-E(Z)^2 = \sigma ^2 = N_0/2$, assuming spectral density $\frac{N_0}{2}$)\\
+~\\
+\textbf{Union Bound}\\
+\emph{bit error probability}: $Pr(e) = Q(\frac{d(a_0, a_1)/2}{\sigma})= Q(\frac{d(a_0, a_1)}{\sqrt{2 N_0}})$, assuming WGN spectral density $N_0/2$
+\end{multicols}
+\end{spacing}
+\end {document}
