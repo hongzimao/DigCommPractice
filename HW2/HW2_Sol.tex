@@ -183,7 +183,13 @@ for each$ 0 \leq f \leq 1/(2T)$, $$\exists m \in \mathbb{Z}, \text{such that} \;
 ~\\
 5. (a)\\
 Notice that  $V_i = \int \phi_i(t)Z(t)dt$ is a Gaussian random variable.\\
-Also, with Spectral density $S_Z(f)= N_0/2$, we have $$ E(V_i ^2) = \int_{-\infty}^{\infty}|\phi_i(t)|^2 S_Z(f) dt$$
+Also, with Spectral density $S_Z(f)= N_0/2$, we have 
+\begin{align*}
+E(V_i ^2) &= E[\int_{-\infty}^{\infty}\phi_i(t) Z(t) dt \int_{-\infty}^{\infty}\phi_i(\tau) Z(\tau) d\tau]\\
+& = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \phi_i(t)\phi_i(\tau) E[Z(t) Z(\tau)] dt d\tau\\
+& = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \phi_i(t)\phi_i(\tau) \frac{N_0}{2}\delta(t-\tau) dt d\tau
+\end{align*}
+(This is because the gaussian r.v. on different time are independent, and $E(Z^2)-E(Z)^2 = \sigma ^2 = N_0/2$)\\
 Since $\{\phi_i(t)\}$ is set of orthonormal functions, we have 
 $$ \int_{-\infty}^{\infty}|\phi_i(t)|^2 dt = \int_{-\infty}^{\infty}\phi_i(t) \phi_i^*(t) dt = 1$$
 Therefore, we have $E(V_i^2) = N_0/2$.
@@ -204,7 +210,11 @@ $$
 and $Y$ is a Gaussian random variable.\\
 ~\\
 Now, notice that
-$$  E(V_i ^2) = \int_{-\infty}^{\infty}|g(t)|^2 S_Z(f) dt = \int_0^T S_Z(f) dt =  \frac{N_0}{2}T$$
+\begin{align*}
+ E(Y ^2) &= E[\int_{-\infty}^{\infty}g(t) Z(t) dt \int_{-\infty}^{\infty}g(\tau) Z(\tau) d\tau] = \int_0^T S_Z(f) dt \\
+ & = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(t)g(\tau) E[Z(t) Z(\tau)] dt d\tau\\
+& = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(t)g(\tau) \frac{N_0}{2}\delta(t-\tau) dt d\tau = \frac{N_0}{2}T
+ \end{align*}
 Then we have
 $$\sigma_Y^2 = E(Y^2) - E(Y)^2 = \frac{N_0}{2}T $$
 $$ Y\sim \mathcal{N}(0, \frac{N_0}{2}T)$$
