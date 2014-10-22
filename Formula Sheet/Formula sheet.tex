@@ -1,5 +1,5 @@
 \documentclass [12pt] {article}
-\usepackage[top=0.9in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage[top=0.8in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
 \usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{hyperref}
@@ -60,9 +60,10 @@ Some bounds: $Q(x) \leq e^{-x^2/2}$\\
 $Q(x) < \frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$\\
 $Q(x) > (1-\frac{1}{x^2})\frac{1}{\sqrt{2\pi x^2}} e^{-x^2/2}$\\
 $Q(x)\leq\frac{1}{2}e^{-x^2/2}$\\
+Chebyshv: $Q(x)\leq\frac{1}{2x^2}$\\
 ~\\
 \textbf{Markov Inequality}: $P(x\leq a)\leq \frac{E(x)}{a}$\\
-\textbf{Chebyshv Inequality}: $P(|x-m|\leq a) \leq \frac{\sigma^2}{a^2}$\\
+\textbf{Chebyshv Inequality}: $P(|x-m|\geq a) \leq \frac{\sigma^2}{a^2}$\\
 \textbf{Chernoff Bound}: $P(X\leq a) \leq e^{-\widetilde{v}a}E(e^{\widetilde{v}X})$\\
 Chernoff Bound holds for $\widetilde{v} > 0$, the \emph{tightest} bound achieves when\\
 $\frac{d}{d\widetilde{v}}(E(e^{\widetilde{v}X})) = E(Xe^{\widetilde{v}X}) = a E(e^{\widetilde{v}X})$\\
@@ -77,6 +78,7 @@ For $\vec{x} = A\vec{w} + \vec{b}$ \\
 $p(\vec{x}) = \frac{1}{(\sqrt{2\pi})^n\sqrt{det(A^T A)}}e^{\frac{1}{2}(\vec{x}-\vec{b})^{T}(A^T A)^{-1}(\vec{x}-\vec{b})}$\\
 Moreover $\vec{x} \sim \mathcal{N}(\vec{b}, A A^T)$\\
 And $\forall \vec c \in \mathcal{R}^n$, $\vec{c}^T \vec{x} \sim \mathcal{N}(\vec{c}^T \vec{b}, \vec{c}^T A A^T \vec{c})$\\
+For 1D case, if $X \sim \mathcal{N}(0,\sigma^2)$, then $aX+b \sim \mathcal{N}(b, a^2\sigma^2)$\\
 ~\\
 \textbf{Complex Random Variable}\\
  $x \sim C\mathcal{N}(0,1)$ (or $x \sim C\mathcal{N}(0,\sigma^2)$)\\
@@ -107,7 +109,7 @@ which is basically the distribution `center'\\
 and the \emph{endpoint} $b_i = \frac{a_{i-1} + a_{i}}{2}$\\
 ~\\
 \textbf{Nyquist Criterion}\\
-$g(t)$ satisfies no \emph{inter-symbol interference} property\\
+$g(t)=p(t)\ast h(t) \ast q(t)$ satisfies no \emph{inter-symbol interference} property\\
 $ g(jT-kT)=\begin{cases}
     1, & \text{if } j=k\\
     0,              & \text{otherwise}
@@ -135,8 +137,22 @@ $ =\int \int E[Z(t)Z(\tau)] g(t) g(\tau) dt d\tau $\\
 $=\int \int \frac{N_0}{2}\delta(t-\tau) g(t) g(\tau) dt d\tau $\\
 (This is because the gaussian r.v. on different time are independent, and $E(Z^2)-E(Z)^2 = \sigma ^2 = N_0/2$, assuming spectral density $\frac{N_0}{2}$)\\
 ~\\
-\textbf{Union Bound}\\
-\emph{bit error probability}: $Pr(e) = Q(\frac{d(a_0, a_1)/2}{\sigma})= Q(\frac{d(a_0, a_1)}{\sqrt{2 N_0}})$, assuming WGN spectral density $N_0/2$
+\textbf{Error Probability}\\
+\emph{bit error probability}: $Pr(e) = Q(\frac{d(a_0, a_1)/2}{\sigma})= Q(\frac{d(a_0, a_1)}{\sqrt{2 N_0}})$, assuming WGN spectral density $N_0/2$\\
+~\\
+\emph{Symbol distance \& Symbol Energy}\\
+In general, the energy for a point in constellation graph is its $norm^2$, take mean of them for the average symbol energy\\
+Further, bit energy $E_b = E_S / log_2 M$\\
+~\\
+\emph{FSK}: $d = \sqrt{2E_s}$ (holds for every two symbols)\\
+\emph{M-PSK}: $d = 2\sqrt{E_s}sin(\pi / M)$\\
+\emph{M-PAM/M-ASK}: $d = \sqrt{\frac{12 E_{savg}}{M^2 -1}}$\\
+\emph{M-QAM}: just derive from stretch, but for M = 4, 16, 64, 256 $d = \sqrt{\frac{6E_{savg}}{M-1}}$\\
+~\\
+$P_c (M-QAM) = P_c^2 (\sqrt{M}-PAM) = (1-P_e(\sqrt{M}-PAM))^2$\\
+$P_e (M-QAM)  = 1-(1-P_e(\sqrt{M}-PAM))^2$\\
+
+
 \end{multicols}
 \end{spacing}
 \end {document}
