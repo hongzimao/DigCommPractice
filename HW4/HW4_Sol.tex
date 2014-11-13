@@ -1,0 +1,141 @@
+\documentclass [12pt] {article}
+\usepackage[top=1in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[export]{adjustbox}
+\usepackage[english]{babel}
+\usepackage[]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+    \dagger
+    \or % 2
+     \dagger 
+    \or % 3  
+     \dagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+\begin {document}
+\begin{spacing}{1.5}
+\begin{center}
+\small
+\textbf{ELEC 5360 Homework 4}\\ Hongzi Mao 2002 5238\\
+\end{center}
+\normalsize
+~\\
+1. \\
+The log-likelihood function is given by 
+\begin{align*}
+ \Lambda _L (\tau) &= \Re[\frac{1}{N_0} \int_{T_0} r(t) s_l^*(t,\tau) dt]\\
+&=\Re[\frac{1}{N_0} \int_{T_0} r(t) \sum_{n} I_n g^*(t - nT -\tau) dt]\\
+&=\Re[\sum_n I_n y_n(\tau)]
+ \end{align*}
+ where $ y_n = \frac{1}{N_0} \int_{T_0} r(t)g^*(t - nT -\tau) dt$\\
+ In order to maximize the likelihood function, we set $$ \frac{d \Lambda _L (\tau)}{d\tau} = \Re[\sum_n I_n \frac{d}{d\tau}y_n(\tau)] = 0$$
+ Further simply the expression, $$\Re[ \sum_n I_n \frac{d}{d\tau}y_n(\tau)] = \sum_n\Re[I_n]\Re[\frac{d}{d\tau}y_n(\tau)] - \sum_n\Im[I_n]\Im[\frac{d}{d\tau}y_n(\tau)]$$
+ Therefore we obtain, $$ \sum_n\Re[I_n]\Re[\frac{d}{d\tau}y_n(\tau)] = \sum_n\Im[I_n]\Im[\frac{d}{d\tau}y_n(\tau)]$$
+~\\
+\pagebreak
+~\\
+2. (a) \\
+\begin{center}
+\includegraphics[width=0.6\textwidth]{3a.jpg}\\
+\end{center}
+(b) \\
+The code rate is 1/3. \\
+The constrain length is 3. \\
+~\\
+(c)\\
+\begin{center}
+\includegraphics[width=0.6\textwidth]{3c.jpg}\\
+\end{center}
+(d)\\
+Split the state a to \emph{start} state a and \emph{end} state e as shown below. \\
+\begin{center}
+\includegraphics[width=0.6\textwidth]{3d.jpg}\\
+\end{center}
+~\\
+Then we obtain
+\begin{align*}
+X_b &= D^2 X_a + D^2 X_c\\
+X_c &= D X_b + D X_d \\
+X_d &= D^3 X_b + D X_d \\
+X_e &= D^2 X_c\\
+\end{align*}
+Simplify the set of equations, we will get 
+\begin{align*}
+X_e &= D^2(D X_b +D X_d) \\
+X_d &= D^3/(1-D) X_b \\
+D^2 X_a &= X_b - D^2(D X_b + D X_d)
+\end{align*}
+Then 
+\begin{align*}
+\frac{X_e}{X_a} &= \frac{(D^3+D^6/(1-D))D^2}{1-D^3 + D^6/(1-D)}\\
+&= \frac{D^5(1-D) + D^8}{(1-D^3)(1-D)+D^6}\\
+&= \frac{D^5-D^6+D^8}{1-D-D^3+D^4+D^6}
+\end{align*}
+(e) \\
+From last equation, we obtain 
+$$\frac{X_e}{X_a} = (D^5 -D^6 + D^8) [1+(D+D^3-D^4-D^6) + (D+D^3-D^4-D^6)^2 + ...] $$
+Therefore the minimum free distance $d_{free}$ of the code is 5.\\
+~\\
+3. \\
+Notice that $f_k - f_j = n/T$ for $n = 1,2,..., N-1$ (as $f_k \neq f_j$), also under the assumption that $f_k+f_j \gg 1$, Then
+\begin{align*}
+&\int_0^T cos(2\pi f_k t + \phi_k)cos(2\pi f_j t +\phi_j) dt\\
+&=\frac{1}{2}\int_0^T cos(2\pi f_k t + \phi_k + 2\pi f_j t +\phi_j) dt +\frac{1}{2} \int_0^T cos(2\pi f_k t + \phi_k - 2\pi f_j t -\phi_j) dt\\
+&=\frac{1}{2}\int_0^T cos(2\pi (f_k + f_j) t + \phi_k +\phi_j) dt +\frac{1}{2} \int_0^T cos(2\pi nt/T + \phi_k -\phi_j) dt\\
+&=\frac{1}{2\pi\frac{n}{T}} \frac{1}{2} sin(2\pi\frac{nt}{T} + \phi_k - \phi_j) \big|_0^T + \frac{1}{2\pi(f_k + f_j)}\frac{1}{2} sin(2\pi (f_k + f_j) t + \phi_k +\phi_j)\big|_0^T
+\end{align*}
+Notice that $$ sin(2\pi\frac{nt}{T} + \phi_k - \phi_j) \big|_0^T  = sin(2\pi n + \phi_k - \phi_j) - sin( \phi_k - \phi_j) = 0$$
+and $$ \frac{1}{2\pi(f_k + f_j)} \simeq 0 \text{ for large } f_k+f_j$$
+Hence we get $\int_0^T cos(2\pi f_k t + \phi_k)cos(2\pi f_j t +\phi_j) dt = 0$ and therefore subcarriers of the corresponding sub-channels are mutually orthogonal.\\
+~\\
+4. (a)\\
+If we dont account the cyclic prefix, the maximum symbol rate for each subcarrier relates to the $\Delta f$. So the ideal maximum symbol rate will be 15k symbol/sec. However, in this specific case, taking the CP in to consideration, using the least amount of CP, we get the maximum symbol rate $ (\text{size}(FFT) - \text{size}(CP))/(\text{size}(FFT)\times T_{sample}) = (2048 - 144)/(2048/(\Delta f \times 2048)) =  13.95 \text{k symbol/sec}$\\
+~\\
+(b)\\
+The symbol duration is given by $T = N T_{tb}$, where $T_tb = 1/f_{tb} $ and $N = 20\text{ MHz} / 15\text{ kHz}$.
+Plugging the numbers in, we get $ 20\text{ MHz} / 15\text{ kHz} / 20\text{ MHz} = 1/15 \approx 0.0667 \text{ sec}$.\\
+~\\
+(c)\\
+One view of the need for CP in OFDM is, in the guarding interval preventing the inter-OFDM system-interference, we may as well arising something to further prevent information loss. More formally, in the channel matrix point of view, cyclic prefix will lead to a circular matrix which can further leads to diagonal matrix decomposition, this help simplify the matrix a lot. \\
+~\\
+(d) \\
+The power loss can be defined as the ratio between redundant information propagated and symbol transmitted. \\
+Therefore, for normal CP, we get $ 144/2048 $, for extended CP, $512/2048$\\
+~\\
+(e) \\
+We need to require the guarding interval spread wider than the delay, namely $CP/(\text{size}(FFT)\Delta f) \geq 7\mu s$, where $\Delta f = 15\text{ kHz}$. Then we get $CP \geq 215.04$. Therefore the extended 512 CP is needed.\\
+\end{spacing}
+\end {document}
