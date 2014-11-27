@@ -1,0 +1,259 @@
+\documentclass [12pt] {article}
+\usepackage[top=1in, bottom=0.9in, left=0.9in, right=0.9in]{geometry}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage[export]{adjustbox}
+\usepackage[english]{babel}
+\usepackage[]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\makeatletter
+\newcommand*{\myfnsymbolsingle}[1]{%
+  \ensuremath{%
+    \ifcase#1% 0
+    \or % 1
+    \dagger
+    \or % 2
+     \dagger 
+    \or % 3  
+     \dagger
+    \or % 4   
+      \mathsection
+    \or % 5
+      \mathparagraph
+    \else % >= 6
+      \@ctrerr  
+    \fi
+  }%   
+}   
+\makeatother
+\makeatletter
+\newcommand{\Spvek}[2][r]{%
+  \gdef\@VORNE{1}
+  \left(\hskip-\arraycolsep%
+    \begin{array}{#1}\vekSp@lten{#2}\end{array}%
+  \hskip-\arraycolsep\right)}
+
+\def\vekSp@lten#1{\xvekSp@lten#1;vekL@stLine;}
+\def\vekL@stLine{vekL@stLine}
+\def\xvekSp@lten#1;{\def\temp{#1}%
+  \ifx\temp\vekL@stLine
+  \else
+    \ifnum\@VORNE=1\gdef\@VORNE{0}
+    \else\@arraycr\fi%
+    #1%
+    \expandafter\xvekSp@lten
+  \fi}
+\makeatother
+
+\newcommand*{\myfnsymbol}[1]{%
+  \myfnsymbolsingle{\value{#1}}%
+}
+
+% remove upper boundary by multiplying the symbols if needed
+\usepackage{alphalph}
+\newalphalph{\myfnsymbolmult}[mult]{\myfnsymbolsingle}{}
+
+\renewcommand*{\thefootnote}{%
+  \myfnsymbolmult{\value{footnote}}%
+}
+
+\begin {document}
+\begin{spacing}{1.5}
+\begin{center}
+\small
+\textbf{ELEC 5360 Homework 5}\\ Hongzi Mao 2002 5238\\
+\end{center}
+\normalsize
+~\\
+1. (a)\\
+First recall that for a matrix A, $$\text{det}(A) = \prod_{i=1}^n \lambda_i$$ where $\lambda_i$'s are the eigenvalues of A.\\
+~\\
+This is because, when obtaining $\lambda_i$'s, we have $det(A-\lambda I) = 0$. Written in \emph{characteristic polynomial} form, we have $det(A-\lambda I) = (\lambda - \lambda_1)(\lambda - \lambda_2) ... (\lambda - \lambda_n)$. Set $\lambda = 0$, we have $\text{det}(A) = \lambda_1\lambda_2...\lambda_n$.\\
+~\\
+Now, $$\text{det}(H H^*) = \prod_{i=1}^{n_{min}}\lambda_i$$ where $\lambda_i$'s are eigenvalues of $HH^*$ and $n_{min} =\text{min}(N_t, N_r)$.\\
+~\\
+Therefore  $$\text{det}(\frac{\gamma}{N_t}H H^*) = \prod_{i=1}^{n_{min}}\frac{\gamma}{N_t}\lambda_i$$
+And $$\text{det}(I_{N_r}+\frac{\gamma}{N_t}H H^*) = \prod_{i=1}^{n_{min}}1+\frac{\gamma}{N_t}\lambda_i$$ this is because, for a matrix $A$, and eigenvalue $\lambda_i$, eigenvector $\vec{v_i}$, $A \vec{v_i} = \lambda_i \vec{v_i}$, we have   $(A+I) \vec{v_i} = (\lambda_i+1) \vec{v_i}$
+Now applying \emph{logarithmic operation} on both sides, we have $$ log_2\,\text{det}(\frac{\gamma}{N_t}H H^*) = \sum_{i=1}^{n_{min}}log_2(1+\frac{\gamma}{N_t}\lambda_i) $$ 
+~\\
+\pagebreak
+~\\
+(b)\\
+We have 
+\begin{align*}
+ C &= \sum_{i=1}^{n_{min}} \mathbb{E}[log_2(1+\frac{\gamma}{N_t}\lambda_i)]\\
+ &= \sum_{i=1}^{n_{min}}\mathbb{E}[\frac{log(1+\frac{\gamma}{N_t}\lambda_i)}{log2}]\\
+ & = \sum_{i=1}^{n_{min}}\mathbb{E}[log(1+\frac{\gamma}{N_t}\lambda_i)] \, log_2e
+ \end{align*}
+ Notice for small $x$, we have $log(1+x) \approx x$.
+ When $\gamma \to 0$, we have 
+ \begin{align*}
+ C &\approx \sum_{i=1}^{n_{min}}\frac{\gamma}{N_t}\mathbb{E}[\lambda_i] \, log_2e\\
+ &=\frac{\gamma}{N_t}\mathbb{E}[tr(HH^*)] \, log_2e\\
+ &=\frac{\gamma}{N_t}\mathbb{E}[\sum_{i,j}|h_{i,j}|^2] \, log_2e
+ \end{align*} 
+ because $tr[A] = \sum_i \lambda_i(A)$, and in the matrix $HH^*$, the $i$'th diagonal element is $\sum_j h_{ij}h_{ji}$.
+ ~\\
+ Now notice that $\mathbb{E}[\sum_{i,j}|h_{i,j}|^2] = N_t N_r$, assuming the normalization of power.\\
+ ~\\
+ So we get $$ C \approx N_r \gamma log_2 e$$
+ ~\\
+ ~\\
+ 2. (a)\\
+ Notice that $\vec{y} - H \vec{x} = \vec{n} \sim \mathcal{N}(0,N_0)$, therefore we get 
+ \begin{align*}
+ p(\vec{p} | H, \vec{x}) &= \frac{1}{(\pi N_0)^{N_r}} exp(\frac{-||\vec{y} - H \vec{x}||^2}{N_0})\\
+ & = \frac{1}{(\pi N_0)^{N_r}} exp(-\frac{\sum_{m=1}^{N_r}|y_m - \sum_{n=1}^{N_t} h_{mn}x_n|^2}{N_0})
+ \end{align*}
+ ~\\
+ (b)\\
+ Estimation of signal $\hat{x}$ of an \emph{ML receiver} is $$\hat{x} = \text{argmin}_{x\in\{s\}}|| \vec{y} - H \vec{x}||^2 $$
+ Using pseduoinverse, we will have $$ \hat{x} = H^*(H H^*)^{-1} \vec{y}$$
+ ~\\
+ (c)\\
+\begin{align*}
+p(\vec{x_k} \to \vec{x_l} | H) &= Q(\frac{||H (\vec{x_k} - \vec{x_l}) ||}{\sqrt{2N_0}})\\
+& = Q(\sqrt{\frac{E_s ||H ( \vec{s_k} - \vec{s_l}) || ^2}{2 N_0 N_r}})\\
+& = Q(\sqrt{\frac{E_b  ||H( \vec{s_k} - \vec{s_l} )|| ^2}{2N_0}})
+\end{align*}
+~\\
+(d) \\
+Written the row vector of matrix $H$ as $h_1, h_2, ..., h_{N_r}$, then
+\begin{align*}
+||H( \vec{s_k} - \vec{s_l} )|| ^2 &= || [h_1^T, h_2^T, ..., h_{N_r}^T]^T (\vec{s_k} - \vec{s_l})||^2\\
+& = \Spvek[c]{h_1^T(\vec{s_k} - \vec{s_l});h_2^T(\vec{s_k} - \vec{s_l}); ... ; h_{N_r}^T(\vec{s_k} - \vec{s_l})}^2
+\end{align*}
+Notice that each row follows Complex Gaussian Distribution as $\mathcal{CN}(0, ||\vec{s_k} - \vec{s_l}||^2)$.\\
+Hence, by the relation between \emph{Gaussian Distribution} and \emph{Chi-Square Distribution}, $$||H( \vec{s_k} - \vec{s_l} )|| ^2 \sim \frac{||( \vec{s_k} - \vec{s_l} )||}{2} \chi^2(2 N_r)$$
+~\\
+(e) \\
+By \emph{Chernoff Bound} of Q-function, we know for average error probability
+\begin{align*}
+p(\vec{x_k} \to \vec{x_l} | H) &= \mathbb{E}(Q(\sqrt{\frac{E_b  ||H( \vec{s_k} - \vec{s_l} )|| ^2}{2N_0}}))\\
+&\leq \frac{1}{2} \mathbb{E}[exp(\frac{E_b  ||H( \vec{s_k} - \vec{s_l} )|| ^2}{4 N_0})]
+\end{align*}
+Now, as we know $ ||H( \vec{s_k} - \vec{s_l} )|| ^2$ follows $\chi^2$ distribution, from the moment generating function, for $\chi^2$ distributed $x$, $\mathbb{E}[e^{tx}] = \frac{1}{(1-2t)^{k/2}}$.\\
+Then we have 
+$$p(\vec{x_k} \to \vec{x_l} | H) = \frac{1}{2(1-\frac{E_b ||H( \vec{s_k} - \vec{s_l} )|| ^2}{4 N_0})^{N_r}} $$
+~\\
+~\\
+3. (a)\\
+$$H = 
+\left[ {\begin{array}{*{20}c}
+   1.0 & 0.2  \\
+   -0.1 & 1.5  \\
+ \end{array} } \right]
+$$
+We have 
+$$HH^* = 
+\left[ {\begin{array}{*{20}c}
+   1.0 & 0.2  \\
+   -0.1 & 1.5  \\
+ \end{array} } \right]\left[ {\begin{array}{*{20}c}
+   1.0 & -0.1  \\
+   0.2 & 1.5  \\
+ \end{array} } \right] = 
+ \left[ {\begin{array}{*{20}c}
+   1.04 & 0.2  \\
+   0.2 & 2.26  \\
+ \end{array} } \right]
+$$
+~\\
+Now we determine the eigenvalues and eigenvectors, let
+$$ det\left( {\begin{array}{*{20}c}
+   1.04 - \lambda & 0.2  \\
+   0.2 & 2.26 -\lambda  \\
+ \end{array} } \right) = 0$$
+ Solving the \emph{characteristic equation}, we have $$\lambda_1 = 1.008, \lambda_2=2.292 $$ with corresponding eigenvectors, $$\vec{v_1} = [0.158, 0.988]^T, \vec{v_2} = [0.988, -0.158]^T$$
+ Therefore, we get the singular value, $$ \sqrt{\lambda_1} = 1.004, \sqrt{\lambda_2} = 1.514 $$
+ Likewise we can do similar process for $H^*H$, and we get the \emph{SVD decomposition} as follows
+ $$
+H = \left[ {\begin{array}{*{20}c}
+   0.158 & 0.988  \\
+   0.988 & -0.158  \\
+ \end{array} } \right]\left[ {\begin{array}{*{20}c}
+   1.514 & 0  \\
+   0 & 1.004 \\
+ \end{array} } \right]
+ \left[ {\begin{array}{*{20}c}
+   0.039 & 0.999  \\
+   0.999 & -0.033  \\
+ \end{array} } \right]
+$$
+~\\
+(b)\\
+For equal power allocation, we have 
+\begin{align*}
+C &= log_2 \,\text{det}(I_{N_r} + \frac{E_s}{N_tN_0}H H^*)\\
+&= \sum _{i=0}^r log_2 \, (1+\frac{E_s}{N_tN_0}\lambda_i(H H^*))\\
+& = log_2(1 + \frac{1}{2\times 2}\times 1.008) + log_2(1+\frac{1}{2\times2}\times 2.292)\\
+&= 0.978 \text{ bps/Hz}
+\end{align*}
+~\\
+(c)\\
+For water filling, we have
+$$ C = \underset{\sum_{k=1}^{r}\gamma_k=N_r}{max}\sum_{k=1}^{r}log_2\,(1+\frac{E_s\lambda_k}{N_tN_0}\gamma_k)$$
+By \emph{Lagrange Multiplier}, we will have optimal $\gamma_k^*$ satisfies \\
+\begin{align*}
+\gamma_k^* &= (\mu - \frac{N_tN_0}{E_s\lambda_k})^+\\
+\sum_{k=1}^r \gamma_i^* &= N_r
+\end{align*}
+where $(x)^+ = x $ if $x >0$, and $= 0$, otherwise.\\
+~\\
+Now, assuming both terms in summation are not zero, we have $ \gamma_1 + \gamma_2 = 2$, which expands to $$ (\mu - \frac{2\times 2}{1\times 1.008}) + (\mu - \frac{2\times 2}{1\times 2.292}) = 2$$
+This leads to $\mu = 3.8567$.\\
+~\\
+Substitute $\mu$ back, we have $$\gamma_1 =0, \gamma_2 = 2.115$$
+which ends up with a summation larger than 0. \\
+~\\
+Therefore, we can only have $$ \mu -  \frac{2\times 2}{1\times 2.292} = 2$$
+This leads to $\mu = 3.7452$.\\
+~\\
+Substitute $\mu$ back, we have $$\gamma_1 =0, \gamma_2 = 2$$\\
+Furthermore, $$ C = log_2 \, (1+ \frac{1\times 2.292}{2\times2}\times 2) = 1.102 \text{ bps/Hz}$$
+So \emph{water-filling} obtains a higher capacity than \emph{equal power} does, which is within expectation, as high quality channel is utilized better.  \\
+4. (a)\\
+For the general \emph{BER} expression, the average error probability can be calculated as follows
+\begin{align*}
+&\int_0^\infty \alpha Q(\sqrt{\beta x}) \frac{1}{\bar\gamma}e^{-\frac{x}{\bar\gamma}}dx\\
+& = \int_0^\infty \alpha \int_{\sqrt{\beta x}}^\infty \frac{1}{\sqrt{2\pi}}e^{-\frac{y^2}{2}}dy\frac{1}{\bar\gamma}e^{-\frac{x}{\bar\gamma}}dx\\
+&= \int_0^\infty \alpha \int_0^{\frac{y^2}{\beta}}\frac{1}{\sqrt{2\pi}}e^{-\frac{y^2}{2}}\frac{1}{\bar\gamma}e^{-\frac{x}{\bar\gamma}}dxdy\\
+&= \int_0^\infty \alpha \frac{1}{\sqrt{2\pi}}e^{-\frac{y^2}{2}}(-e^{-\frac{x}{\bar\gamma}}\big|_0^{\frac{y^2}{\beta}})dy\\
+&= \frac{\alpha}{\sqrt{2\pi}}\int_0^\infty e^{-\frac{y^2}{2}}(1-e^{-\frac{y^2}{\beta \bar\gamma}})dy\\
+& = \frac{\alpha}{\sqrt{2\pi}}\int_0^\infty e^{-\frac{y^2}{2}}dy - \frac{\alpha}{\sqrt{2\pi}}\int_0^\infty e^{-\frac{y^2}{2}-\frac{y^2}{\beta \bar\gamma}}dy\\
+&=\frac{\alpha}{\sqrt{2\pi}}(\frac{\sqrt{2\pi}}{2} - \frac{\sqrt{2\pi}}{2}\sqrt{\frac{\bar\gamma\beta/2}{\bar\gamma\beta/2 +1}})\\
+& = \frac{\alpha}{2}(1- \sqrt{\frac{\bar\gamma\beta/2}{\bar\gamma\beta/2 +1}})
+\end{align*}
+~\\
+(b)\\
+For \emph{BPSK} $\alpha = 1, \beta = 2$, then $$ \bar{p_b} = \frac{1}{2}(1-\sqrt{\frac{\bar\gamma}{\bar\gamma +1}}) = \frac{1}{2}(1-\sqrt{\frac{1}{1+\frac{1}{\bar\gamma}}})$$
+For high \emph{SNR} (large $\bar\gamma$), we denote $\epsilon = \frac{1}{\bar\gamma}$, which is small\\
+\begin{align*}
+\frac{1}{\sqrt{1+\epsilon}} &= 1 + (\frac{1}{\sqrt{1+\epsilon}})'\big|_{\epsilon=0}\epsilon + o(\epsilon^2)\\
+&=1-\frac{1}{2}(1+\epsilon)^{-\frac{3}{2}}\big|_{\epsilon=0}\epsilon + o(\epsilon^2)\\
+&\approx 1 - \frac{1}{2}\epsilon
+\end{align*}
+Substitute this result back, we obtain for high \emph{SNR}, 
+$$ \bar{p_b} \approx \frac{1}{2} [1-1 + \frac{1}{2\bar\gamma}] = \frac{1}{4}\gamma^{-1}$$ 
+~\\
+(c)
+\begin{align*}
+p_b &= \int_0^\infty Q(\sqrt{2\gamma_b})p(\gamma_b)d\gamma_b\\
+&= \int_0^\infty\int_{\sqrt{2\gamma_b}}^\infty \frac{1}{\sqrt{2\pi}} e^{-y^2/2}dy\frac{1}{(L-1)!\bar\gamma_c^L}\gamma_b^{L-1}e^{-\gamma_b/\gamma_c}d\gamma_b\\
+&=\frac{1}{(L-1)!\bar\gamma_c^L} \int_0^\infty\frac{1}{\sqrt{2\pi}} e^{-y^2/2} \int_0^{y^2/2} \gamma_b^{L-1}e^{-\gamma_b/\gamma_c}d\gamma_b \,dy\\
+&= \frac{1}{(L-1)!\bar\gamma_c^L} \int_0^\infty\frac{1}{\sqrt{2\pi}} e^{-y^2/2} \gamma_c^L(L!-(L-1)!\Gamma[L,\frac{y^2}{2\gamma_c}])dy\\
+& = \int_0^\infty\frac{1}{\sqrt{2\pi}} e^{-y^2/2}(L-\sum_{k=0}\frac{y^{2k}}{(2\gamma_c)^k k!})dy\\
+& = \frac{L}{2} -\sum_{k=0}\int_0^\infty \frac{e^{-y^2/2}y^{2k}}{(2\gamma_c)^k k!} dy\\
+& = \frac{L}{2} - \sum_{k=0}{L-1}\frac{1}{(\gamma_c)^k k!} 2^{-1/2+k} \Gamma(\frac{1}{2}+k)
+\end{align*}
+which is numerically equivalent to\\
+$$ [\frac{1}{2}(1-\mu)]^L \sum_{k=0}^{L-1}\Spvek[c]{L-1+k;k}[\frac{1}{2}(1+\mu)]^k$$
+where $\mu = \sqrt{\frac{\bar\gamma_c}{1+\bar\gamma_c}}$
+\end{spacing}
+\end {document}
