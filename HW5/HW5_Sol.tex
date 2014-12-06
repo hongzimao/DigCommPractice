@@ -192,8 +192,8 @@ For equal power allocation, we have
 \begin{align*}
 C &= log_2 \,\text{det}(I_{N_r} + \frac{E_s}{N_tN_0}H H^*)\\
 &= \sum _{i=0}^r log_2 \, (1+\frac{E_s}{N_tN_0}\lambda_i(H H^*))\\
-& = log_2(1 + \frac{1}{2\times 2}\times 1.008) + log_2(1+\frac{1}{2\times2}\times 2.292)\\
-&= 0.978 \text{ bps/Hz}
+& = log_2(1 + \frac{1}{2\times 0.1}\times 1.008) + log_2(1+\frac{1}{2\times0.1}\times 2.292)\\
+&= 6.233 \text{ bps/Hz}
 \end{align*}
 ~\\
 (c)\\
@@ -206,18 +206,15 @@ By \emph{Lagrange Multiplier}, we will have optimal $\gamma_k^*$ satisfies \\
 \end{align*}
 where $(x)^+ = x $ if $x >0$, and $= 0$, otherwise.\\
 ~\\
-Now, assuming both terms in summation are not zero, we have $ \gamma_1 + \gamma_2 = 2$, which expands to $$ (\mu - \frac{2\times 2}{1\times 1.008}) + (\mu - \frac{2\times 2}{1\times 2.292}) = 2$$
-This leads to $\mu = 3.8567$.\\
+Now, assuming both terms in summation are not zero, we have $ \gamma_1 + \gamma_2 = 2$, which expands to $$ (\mu - \frac{2\times 0.1}{1\times 1.008}) + (\mu - \frac{2\times 0.1}{1\times 2.292}) = 2$$
+This leads to $\mu = 1.143$.\\
 ~\\
-Substitute $\mu$ back, we have $$\gamma_1 =0, \gamma_2 = 2.115$$
-which ends up with a summation larger than 0. \\
-~\\
-Therefore, we can only have $$ \mu -  \frac{2\times 2}{1\times 2.292} = 2$$
-This leads to $\mu = 3.7452$.\\
-~\\
-Substitute $\mu$ back, we have $$\gamma_1 =0, \gamma_2 = 2$$\\
-Furthermore, $$ C = log_2 \, (1+ \frac{1\times 2.292}{2\times2}\times 2) = 1.102 \text{ bps/Hz}$$
+Substitute $\mu$ back, we have $$\gamma_1 =0.944, \gamma_2 = 1.056$$
+Furthermore, $$ C = log_2 \, (1+ \frac{1\times 1.008}{2\times0.1}\times 0.944) +  log_2 \, (1+ \frac{1\times 2.292}{2\times0.1}\times 1.056) = 6.237 \text{ bps/Hz}$$
 So \emph{water-filling} obtains a higher capacity than \emph{equal power} does, which is within expectation, as high quality channel is utilized better.  \\
+~\\
+\pagebreak
+~\\
 4. (a)\\
 For the general \emph{BER} expression, the average error probability can be calculated as follows
 \begin{align*}
